@@ -3,11 +3,11 @@ const {
   listContacts,
   getContactById,
   removeContact,
-} = require("./src/contacts/contacts");
+} = require("./contacts/contacts");
 
 const fs = require("fs").promises;
 
-const contacts = require("./src/db/contacts.json");
+const contacts = require("./db/contacts.json");
 const program = new Command();
 program
   .option("-a, --action <type>", "choose action")
