@@ -1,31 +1,62 @@
 const fs = require("fs").promises;
 const path = require("path");
-const contactsPath = require("./src/db.contacts.json");
+const contactsPath = path.join(
+  __dirname,
+  "src",
+  __dirname,
+  "db",
+  "contacts.json"
+);
 const { v4: uuidv4 } = require("uuid");
-const { program } = require("commander");
-program
-  .option("-a, --action [type]", "Action to do", "list")
-  .option("-f, --filter [type]", "Filter by name", "all")
-  .option("-n, --name [type]", "Contact name", false)
-  .option("-nu, --number[type]", "Contact number", false)
-  .option("-id, --");
-program.parse(process.argv);
 
 function listContacts() {
-  fs.readFile(contactsPath).then((resp) => {
-    const contacts = JSON.parse(resp);
-    console.table(contacts);
-  });
+  fs.readFile(contactsPath)
+    .then((resp) => {
+      const contacts = JSON.parse(resp);
+      console.table(contacts);
+    })
+    .catch((error) => console.log(error.message));
 }
 function getContactById(contactId) {
-  fs.readFile(contactsPath).then((response) => {
-    const contacts = JSON.parse(response);
-    const contact = contacts.filter((elem) => elem === contactId);
-    console.table(contact);
-  });
+  fs.readFile(contactsPath)
+    .then((response) => {
+      const contacts = JSON.parse(response);
+      const contact = contacts.filter((elem) => elem === contactId);
+      console.table(contact);
+    })
+    .catch((error) => console.log(error.message));
 }
-function removeContact(contactId) {}
-function addContact(name, email, phone) {}
+function addContact(name, email, phone) {
+  fs.readFile(contactsPath)
+    .then((resp) => {
+      const contacts = JSON.parse(resp);
+      const newContact = {
+        id: uuidv4(),
+        name,
+        email,
+        phone,
+      };
+      const newContacts = [...contacts, newContact];
+      return fs.writeFile(contactsPath, JSON.stringify(newContacts));
+    })
+    .then(() => {
+      return fs.readFile(contactsPath);
+    })
+    .then((data) => {
+      const contacts = JSON.parse(data);
+      console.table(contacts);
+    })
+    .catch((error) => console.log(error.message));
+}
+function removeContact(contactId) {
+  fs.readFile(contactsPath)
+    .then((response) => {
+      const contacts = JSON.parse(response);
+      const newContacts = contacts.filter((elem) => !elem.id === contactId);
+      console.table(newContacts);
+    })
+    .catch((error) => console.log(error.message));
+}
 
 module.exports = {
   listContacts,
