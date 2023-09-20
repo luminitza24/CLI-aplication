@@ -1,13 +1,11 @@
-const { Command } = require("commander");
 const {
   listContacts,
   getContactById,
   removeContact,
-} = require("./contacts/contacts");
+  addContact,
+} = require("./contacts");
 
-const fs = require("fs").promises;
-
-const contacts = require("./db/contacts.json");
+const { Command } = require("commander");
 const program = new Command();
 program
   .option("-a, --action <type>", "choose action")
