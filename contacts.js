@@ -44,18 +44,19 @@ function addContact(name, email, phone) {
 }
 function removeContact(contactId) {
   fs.readFile(contactsPath)
-    .then((response) => {
-      const contacts = JSON.parse(response);
-      const newContacts = contacts.filter((elem) => !elem.id === contactId);
-      return fs
-        .writeFile(contactsPath, JSON.stringify(newContacts))
-        .then(() => {
-          return fs.readFile(contactsPath);
-        })
-        .then((data) => {
-          const contacts = JSON.parse(data);
-          console.table(contacts);
-        });
+    .then((data) => {
+      const contacts = JSON.parse(data);
+      const newContacts = contacts.filter(
+        (contact) => contact.id !== contactId
+      );
+      return fs.writeFile(contactsPath, JSON.stringify(newContacts));
+    })
+    .then(() => {
+      return fs.readFile(contactsPath);
+    })
+    .then((data) => {
+      const contacts = JSON.parse(data);
+      console.table(contacts);
     })
     .catch((error) => console.log(error.message));
 }
