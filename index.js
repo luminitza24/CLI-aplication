@@ -35,11 +35,7 @@ function invokeAction({ action, id, name, email, phone }) {
       if (!name && !email && !phone) {
         throw new Error("Please enter valid name, email and phone number!");
       }
-      fs.readFile("./src/db/contacts.json", "utf8", (err, contacts) => {
-        const newContacts = JSON.parse(contacts);
-        newContacts.push({ id: uuidv4(), name: name, number: number });
-        fs.writeFileSync("./src/db/contacts.json", JSON.stringify(newContacts));
-      });
+      addContact(name, email, phone);
       break;
 
     case "remove":
@@ -47,6 +43,7 @@ function invokeAction({ action, id, name, email, phone }) {
         throw new Error("Please provide contact id!");
       }
       removeContact(id);
+
       break;
 
     default:

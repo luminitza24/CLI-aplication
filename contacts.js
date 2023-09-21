@@ -5,16 +5,16 @@ const { v4: uuidv4 } = require("uuid");
 
 function listContacts() {
   fs.readFile(contactsPath)
-    .then((data) => {
-      const contacts = JSON.parse(data);
+    .then((resp) => {
+      const contacts = JSON.parse(resp);
       console.table(contacts);
     })
     .catch((error) => console.log(error.message));
 }
 function getContactById(contactId) {
   fs.readFile(contactsPath)
-    .then((data) => {
-      const contacts = JSON.parse(data);
+    .then((response) => {
+      const contacts = JSON.parse(response);
       const contact = contacts.filter((elem) => elem === contactId);
       console.table(contact);
     })
@@ -22,8 +22,8 @@ function getContactById(contactId) {
 }
 function addContact(name, email, phone) {
   fs.readFile(contactsPath)
-    .then((data) => {
-      const contacts = JSON.parse(data);
+    .then((resp) => {
+      const contacts = JSON.parse(resp);
       const newContact = {
         id: uuidv4(),
         name,
@@ -44,10 +44,18 @@ function addContact(name, email, phone) {
 }
 function removeContact(contactId) {
   fs.readFile(contactsPath)
-    .then((data) => {
-      const contacts = JSON.parse(data);
+    .then((response) => {
+      const contacts = JSON.parse(response);
       const newContacts = contacts.filter((elem) => !elem.id === contactId);
-      console.table(newContacts);
+      return fs
+        .writeFile(contactsPath, JSON.stringify(newContacts))
+        .then(() => {
+          return fs.readFile(contactsPath);
+        })
+        .then((data) => {
+          const contacts = JSON.parse(data);
+          console.table(contacts);
+        });
     })
     .catch((error) => console.log(error.message));
 }
