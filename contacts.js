@@ -13,13 +13,14 @@ function listContacts() {
 }
 function getContactById(contactId) {
   fs.readFile(contactsPath)
-    .then((response) => {
-      const contacts = JSON.parse(response);
-      const contact = contacts.filter((elem) => elem === contactId);
+    .then((data) => {
+      const contacts = JSON.parse(data);
+      const contact = contacts.filter((elem) => elem.id === contactId);
       console.table(contact);
     })
     .catch((error) => console.log(error.message));
 }
+
 function addContact(name, email, phone) {
   fs.readFile(contactsPath)
     .then((resp) => {
